@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mnews/models/news.dart';
 
 class NewsRepository {
-
+ //Get news From Appi
   Future<List<News>> getNews({@required String category}) async {
     String newsUrl =
         'http://newsapi.org/v2/top-headlines?country=us&category=${category.toLowerCase()}&apiKey=fef95cba02dc4ca5b514813713664d93';

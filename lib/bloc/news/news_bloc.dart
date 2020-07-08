@@ -25,7 +25,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   // Get news from Api
   Stream<NewsState> _getNews(category) async* {
     yield NewsLoading();
-
+  // Check for Internet Connection
     bool isConnected =
         await isInternetConnected(); //TODO : Handle Internet Error With Listener
 

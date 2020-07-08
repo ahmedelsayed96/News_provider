@@ -25,11 +25,13 @@ class NewsList extends StatelessWidget  {
   }
 
   _buildList(NewsBloc newsBloc) {
-    print('build list');
+
     return BlocBuilder<NewsBloc, NewsState>(builder: (context, state) {
       if (state is NewsLoading) {
         return Center(child: CircularProgressIndicator());
+
       } else if (state is NewsLoaded) {
+        // display loaded news
         return Container(
           child: ListView.builder(
             itemCount: state.news.length,
@@ -40,6 +42,7 @@ class NewsList extends StatelessWidget  {
         );
       }else if (state is NewsLoadedError )
       {
+        // in Case of Error Display Error Icon and message
         return  Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
