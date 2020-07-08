@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mnews/models/news.dart';
 import 'package:mnews/news_row.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:mnews/pages/home.dart';
+import 'package:mnews/pages/news_details.dart';
+import 'package:mnews/pages/splash.dart';
+import 'package:mnews/routes.dart';
+
+import 'localization/app_localizations.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,64 +16,45 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'News Demo',
+      title: 'News',
+
+      debugShowCheckedModeBanner: false,
+      // Theme
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'NEWS'),
+
+      //Supported Locals
+      supportedLocales: [
+        Locale('en', 'US'),
+//        Locale('ar', 'EG'),
+      ],
+      routes: {
+        NewsDetailsRoute: (context) => NewsDetails(),
+      },
+      localizationsDelegates: [
+        // THIS CLASS WILL BE ADDED LATER
+        // A class which loads the translations from JSON files
+        AppLocalizations.delegate,
+        // Built-in localization of basic text for Material widgets
+        GlobalMaterialLocalizations.delegate,
+        // Built-in localization for text direction LTR/RTL
+        GlobalWidgetsLocalizations.delegate,
+      ],
+//      localeResolutionCallback: (locale, supportedLocales) {
+//        // Check if the current device locale is supported
+//        for (var supportedLocale in supportedLocales) {
+//          if (supportedLocale.languageCode == locale.languageCode &&
+//              supportedLocale.countryCode == locale.countryCode) {
+//            return supportedLocale;
+//          }
+//        }
+//        // If the locale of the device is not supported, use the first one
+//        // from the list (English, in this case).
+//        return supportedLocales.first;
+//      },
+
+      home: SplashScreen(),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({this.title});
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<News> list = [];
-
-  String newsUrl =
-      'http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=fef95cba02dc4ca5b514813713664d93';
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _fetchData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.title),
-      ),
-      body: Container(
-        child: list.length == 0
-            ? Center(child: CircularProgressIndicator())
-            : ListView(
-                children: list.map((news) => NewsRow(news)).toList(),
-              ),
-      ),
-    );
-  }
-
-  _fetchData() async {
-    final response = await http.get(newsUrl);
-    if (response.statusCode == 200) {
-      list = ((json.decode(response.body)['articles']) as List)
-          .map((data) => new News.fromJson(data))
-          .toList();
-      setState(() {});
-    } else {
-      print('Failed to load photos');
-    }
   }
 }
